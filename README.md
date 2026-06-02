@@ -30,23 +30,14 @@ Este proyecto es una aplicación React con un pipeline de CI/CD configurado para
    npm install
    ```
 
-3. **Configurar variables de entorno**
+3. **Configurar Secrets en GitHub**
    
-   Copia el archivo `.env.example` a `.env` y configura las siguientes variables:
-   - `EC2_SSH_PRIVATE_KEY`: Tu clave SSH privada para EC2
-   - `AWS_ACCESS_KEY`: Tu clave de acceso AWS
-   - `AWS_ACCESS_ID`: Tu ID de acceso AWS
-   - `EC2_INSTANCE`: ID de tu instancia EC2
-   - `EC2_USER`: Usuario de tu instancia EC2
-
-4. **Configurar Secrets en GitHub**
-   
-   Añade los siguientes secrets en tu repositorio de GitHub:
-   - `EC2_SSH_PRIVATE_KEY`
-   - `AWS_ACCESS_KEY`
-   - `AWS_ACCESS_ID`
-   - `EC2_INSTANCE`
-   - `EC2_USER`
+   Añade los siguientes secrets en tu repositorio de GitHub (`Settings` -> `Secrets and variables` -> `Actions`):
+   - `AWS_ACCESS_ID`: Access Key ID de AWS.
+   - `AWS_ACCESS_KEY`: Secret Access Key de AWS.
+   - `EC2_SSH_PRIVATE_KEY`: Clave privada SSH para conectarte a la EC2 (contenido de `id_rsa.pem`).
+   - `EC2_INSTANCE`: IP pública o DNS de la instancia EC2.
+   - `EC2_USER`: Usuario SSH de la instancia (por ejemplo, `ubuntu`).
 
 ## 🏃‍♂️ Desarrollo Local
 
@@ -68,14 +59,15 @@ Este proyecto es una aplicación React con un pipeline de CI/CD configurado para
 ## 📦 Despliegue
 
 El despliegue se realiza automáticamente cuando:
-- Se abre un Pull Request a la rama `main`
-- Se actualiza un Pull Request existente en la rama `main`
+- Se abre o actualiza una Pull Request hacia `main`
+- Se ejecuta manualmente el workflow (`workflow_dispatch`)
 
 El pipeline de GitHub Actions:
 1. Verifica el código
 2. Instala dependencias
 3. Ejecuta pruebas
 4. Construye la aplicación
-5. Despliega a EC2
+5. Configura credenciales AWS (`AWS_ACCESS_ID`, `AWS_ACCESS_KEY`)
+6. Copia el build a la carpeta `react-app` en EC2 vía SSH/`scp`
 
 ## 🛠️ Estructura del Proyecto 
